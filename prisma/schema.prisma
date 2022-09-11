@@ -34,7 +34,7 @@ model SecureNotes {
   userId    Int
   user      Users  @relation(fields: [userId], references: [id])
   title     String @db.VarChar(50)
-  anotation String @db.VarChar(1000)
+  note String @db.VarChar(1000)
 
   @@unique([title, userId])
 }
