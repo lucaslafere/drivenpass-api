@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as usersController from '../controllers/usersController';
-import validateToken from '../middlewares/validateTokenMiddleware';
 
 const userRouter = Router();
 

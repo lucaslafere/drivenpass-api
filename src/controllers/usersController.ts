@@ -13,6 +13,8 @@ export async function createUser (req: Request, res: Response){
 
 export async function login (req: Request, res: Response){
     const userData: UserData = req.body;
+    const { error } = userSchema.validate(userData);
+    if (error) throw {type: 'wrong-body-format', message: error.message, code: 400};
     const token = await usersService.login(userData);
     return res.status(200).send({message: "Logged in", token});
 }
