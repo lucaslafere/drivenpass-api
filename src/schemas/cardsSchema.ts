@@ -13,7 +13,7 @@ export const cardSchema = joi.object({
     .pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)
     .required(),
   password: joi.string().trim().required(),
-  isVirtual: joi.bool().required(),
+  isVirtual: joi.bool().required().strict(),
   type: joi.string().valid("credit", "debit", "both").required(),
   label: joi.string().trim().required(),
 });

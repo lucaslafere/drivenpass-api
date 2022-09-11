@@ -20,18 +20,18 @@ export async function insert(
 
 export async function findAll(userId: number) {
   const findUserData = await cardsRepository.findAll(userId);
-  const decryptedData = findUserData.map((el) => {
+  const decryptedData = findUserData.map((card) => {
     return {
-      ...el,
-      password: dataEncrypter.decryptData(el.password),
-      securityCode: dataEncrypter.decryptData(el.securityCode),
+      ...card,
+      password: dataEncrypter.decryptData(card.password),
+      securityCode: dataEncrypter.decryptData(card.securityCode),
     };
   });
   return decryptedData;
 }
 
-export async function findById(id: number, userId: number) {
-  const cardDetails = await cardsRepository.findById(id);
+export async function findById(cardId: number, userId: number) {
+  const cardDetails = await cardsRepository.findById(cardId);
   if (!cardDetails)
     throw {
       type: "not-found",
@@ -47,8 +47,8 @@ export async function findById(id: number, userId: number) {
   };
 }
 
-export async function deletebyId (id: number, userId: number){
-    const cardDetails = await cardsRepository.findById(id);
+export async function deletebyId (cardId: number, userId: number){
+    const cardDetails = await cardsRepository.findById(cardId);
     if (!cardDetails)
     throw {
       type: "not-found",
@@ -57,5 +57,5 @@ export async function deletebyId (id: number, userId: number){
     };
   if (cardDetails.userId !== userId)
     throw { type: "unauthorized", message: "You can't do this", code: 401 };
-    await cardsRepository.deleteById(id);
+    await cardsRepository.deleteById(cardId);
 }
