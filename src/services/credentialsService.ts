@@ -4,7 +4,6 @@ import { CredentialsData } from '../types/credentialsType';
 
 export async function insert (credentials: Omit<CredentialsData, "userId">, userId: number){
     const findUserData = await credentialsRepository.findUserCredentials(userId);
-    if (!findUserData) throw {type: "not-found", message: "no credentials found with this userId", code: 404};
     if(findUserData.some(result => result.label === credentials.label) ) throw {type: 'conflict', message: "no repeated labels", code: 400};
     const result = await credentialsRepository.insert({
         ...credentials,
@@ -16,7 +15,7 @@ export async function insert (credentials: Omit<CredentialsData, "userId">, user
 
 export async function findAll (userId: number) {
     const findUserData = await credentialsRepository.findUserCredentials(userId);
-    if (!findUserData) throw {type: "not-found", message: "no credentials found with this userId", code: 404};
+
     const decryptedData = findUserData.map(el => {
         return {...el, password: dataEncrypter.decryptData(el.password)}
     });
