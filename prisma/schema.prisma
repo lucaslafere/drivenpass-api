@@ -6,3 +6,66 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Users {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  credentials Credentials[]
+  secureNotes SecureNotes[]
+  cards       Cards[]
+  wifis       Wifis[]
+}
+
+model Credentials {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  user     Users  @relation(fields: [userId], references: [id])
+  label    String
+  userName String
+  password String
+  url      String
+
+  @@unique([userId, label])
+}
+
+model SecureNotes {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  user      Users  @relation(fields: [userId], references: [id])
+  title     String @db.VarChar(50)
+  anotation String @db.VarChar(1000)
+
+  @@unique([title, userId])
+}
+
+enum CardTypes {
+  debit
+  credit
+  both
+}
+
+model Cards {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  user           Users     @relation(fields: [userId], references: [id])
+  label          String
+  cardNumber     String
+  cardHolderName String
+  securityCode   String
+  expirationDate String    @db.VarChar(5)
+  password       String
+  isVirtual      Boolean   @default(false)
+  type           CardTypes
+
+  @@unique([userId, label])
+}
+
+model Wifis {
+  id          Int    @id @default(autoincrement())
+  userId      Int
+  user        Users  @relation(fields: [userId], references: [id])
+  label       String
+  networkName String
+  password    String
+}
